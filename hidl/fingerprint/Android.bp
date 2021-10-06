@@ -1,8 +1,51 @@
-cc_binary {
-    name: "android.hardware.biometrics.fingerprint@2.1-service.oneplus",
+soong_config_module_type {
+    name: "oneplus_fp_hal_cc_defaults",
+    module_type: "cc_defaults",
+    config_namespace: "ONEPLUS_FOD",
+    value_variables: [
+        "POS_X",
+        "POS_Y",
+        "SIZE",
+    ],
+    properties: ["cppflags"],
+}
+
+oneplus_fp_hal_cc_defaults {
+    name: "oneplus_fp_hal_defaults",
     defaults: ["hidl_defaults"],
-    init_rc: ["android.hardware.biometrics.fingerprint@2.1-service.oneplus.rc"],
-    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.1-service.oneplus.xml"],
+    relative_install_path: "hw",
+    soong_config_variables: {
+        POS_X: {
+            cppflags: ["-DFOD_POS_X=%s"],
+        },
+        POS_Y: {
+            cppflags: ["-DFOD_POS_Y=%s"],
+        },
+        SIZE: {
+            cppflags: ["-DFOD_SIZE=%s"],
+        },
+    },
+    srcs: [
+        "service.cpp",
+        "FingerprintInscreen.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+        "libhardware",
+        "libhidlbase",
+        "liblog",
+        "libutils",
+        "vendor.goodix.hardware.biometrics.fingerprint@1.0",
+        "vendor.oneplus.fingerprint.extension@1.0",
+        "vendor.oneplus.hardware.display@1.0",
+    ],
+}
+
+cc_binary {
+    name: "android.hardware.biometrics.fingerprint@2.3-service.oneplus",
+    defaults: ["hidl_defaults", "oneplus_fp_hal_defaults"],
+    init_rc: ["android.hardware.biometrics.fingerprint@2.3-service.oneplus.rc"],
+    vintf_fragments: ["android.hardware.biometrics.fingerprint@2.3-service.oneplus.xml"],
     vendor: true,
     relative_install_path: "hw",
     srcs: [
@@ -16,7 +59,7 @@ cc_binary {
         "libhidlbase",
         "libhardware",
         "libutils",
-        "android.hardware.biometrics.fingerprint@2.1",
+        "android.hardware.biometrics.fingerprint@2.3",
     ],
 
 }
