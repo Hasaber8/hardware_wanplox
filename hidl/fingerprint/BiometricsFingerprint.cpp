@@ -41,7 +41,7 @@ namespace V2_3 {
 namespace implementation {
 
 // Supported fingerprint HAL version
-static const uint16_t kVersion = HARDWARE_MODULE_API_VERSION(2, 3);
+static const uint16_t kVersion = HARDWARE_MODULE_API_VERSION(2, 1);
 
 using RequestStatus =
         android::hardware::biometrics::fingerprint::V2_1::RequestStatus;
@@ -54,8 +54,8 @@ BiometricsFingerprint::BiometricsFingerprint() : mClientCallback(nullptr), mDevi
     if (!mDevice) {
         ALOGE("Can't open HAL module");
     }
-    this->mVendorFpService = IVendorFingerprintExtensions::getService();
-    this->mVendorDisplayService = IOneplusDisplay::getService();
+    mVendorFpService = IVendorFingerprintExtensions::getService();
+    mVendorDisplayService = IOneplusDisplay::getService();
 }
 
 BiometricsFingerprint::~BiometricsFingerprint() {
@@ -165,8 +165,8 @@ Return<uint64_t> BiometricsFingerprint::setNotify(
 }
 
 Return<uint64_t> BiometricsFingerprint::preEnroll()  {
-    this->mVendorFpService->updateStatus(OP_DISABLE_FP_LONGPRESS);
-    this->mVendorFpService->updateStatus(OP_RESUME_FP_ENROLL);
+    mVendorFpService->updateStatus(OP_DISABLE_FP_LONGPRESS);
+    mVendorFpService->updateStatus(OP_RESUME_FP_ENROLL);
     return mDevice->pre_enroll(mDevice);
 }
 
@@ -178,7 +178,7 @@ Return<RequestStatus> BiometricsFingerprint::enroll(const hidl_array<uint8_t, 69
 }
 
 Return<RequestStatus> BiometricsFingerprint::postEnroll() {
-    this->mVendorFpService->updateStatus(OP_FINISH_FP_ENROLL);
+    mVendorFpService->updateStatus(OP_FINISH_FP_ENROLL);
     return ErrorFilter(mDevice->post_enroll(mDevice));
 }
 
@@ -371,18 +371,18 @@ void BiometricsFingerprint::notify(const fingerprint_msg_t *msg) {
     }
 }
 
-Return<bool> isUdFps() {
+Return<bool> BiometricsFingerprint::isUdfps(uint32_t) {
     return true;
 }
 
-Return<void> onFingerDown(uint32_t x, uint32_t y, float minor, float major) {
-    this->mVendorDisplayService->setMode(OP_DISPLAY_NOTIFY_PRESS, 1);
+Return<void> BiometricsFingerprint::onFingerDown(uint32_t, uint32_t, float, float) {
+    mVendorDisplayService->setMode(OP_DISPLAY_NOTIFY_PRESS, 1);
 
     return Void();
 }
 
-Return<void> onFingerUp() {
-    this->mVendorDisplayService->setMode(OP_DISPLAY_NOTIFY_PRESS, 0);
+Return<void> BiometricsFingerprint::onFingerUp() {
+    mVendorDisplayService->setMode(OP_DISPLAY_NOTIFY_PRESS, 0);
 
     return Void();
 }

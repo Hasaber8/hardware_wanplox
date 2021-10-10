@@ -24,6 +24,7 @@
 #include <hidl/MQDescriptor.h>
 #include <hidl/Status.h>
 #include <android/hardware/biometrics/fingerprint/2.3/IBiometricsFingerprint.h>
+#include <android/hardware/biometrics/fingerprint/2.1/types.h>
 
 #include <vendor/oneplus/fingerprint/extension/1.0/IVendorFingerprintExtensions.h>
 #include <vendor/oneplus/hardware/display/1.0/IOneplusDisplay.h>
@@ -36,13 +37,17 @@ namespace V2_3 {
 namespace implementation {
 
 using ::android::hardware::biometrics::fingerprint::V2_3::IBiometricsFingerprint;
-using ::android::hardware::biometrics::fingerprint::V2_3::IBiometricsFingerprintClientCallback;
-using ::android::hardware::biometrics::fingerprint::V2_3::RequestStatus;
+using ::android::hardware::biometrics::fingerprint::V2_1::IBiometricsFingerprintClientCallback;
+using ::android::hardware::biometrics::fingerprint::V2_1::RequestStatus;
+using ::android::hardware::biometrics::fingerprint::V2_1::FingerprintAcquiredInfo;
+using ::android::hardware::biometrics::fingerprint::V2_1::FingerprintError;
 using ::android::hardware::Return;
 using ::android::hardware::Void;
 using ::android::hardware::hidl_vec;
 using ::android::hardware::hidl_string;
 using ::android::sp;
+using ::vendor::oneplus::fingerprint::extension::V1_0::IVendorFingerprintExtensions;
+using ::vendor::oneplus::hardware::display::V1_0::IOneplusDisplay;
 
 struct BiometricsFingerprint : public IBiometricsFingerprint {
 public:
@@ -63,9 +68,9 @@ public:
     Return<RequestStatus> remove(uint32_t gid, uint32_t fid) override;
     Return<RequestStatus> setActiveGroup(uint32_t gid, const hidl_string& storePath) override;
     Return<RequestStatus> authenticate(uint64_t operationId, uint32_t gid) override;
-    Return<bool> isUdfps();
-    Return<void> onFingerDown(uint32_t x, uint32_t y, float minor, float major);
-    Return<void> onFingerUp();
+    Return<bool> isUdfps(uint32_t sensorID) override;
+    Return<void> onFingerDown(uint32_t x, uint32_t y, float minor, float major) override;
+    Return<void> onFingerUp() override;
 
 private:
     static const char* getModuleId();

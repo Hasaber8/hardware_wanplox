@@ -13,7 +13,6 @@ soong_config_module_type {
 oneplus_fp_hal_cc_defaults {
     name: "oneplus_fp_hal_defaults",
     defaults: ["hidl_defaults"],
-    relative_install_path: "hw",
     soong_config_variables: {
         POS_X: {
             cppflags: ["-DFOD_POS_X=%s"],
@@ -25,20 +24,6 @@ oneplus_fp_hal_cc_defaults {
             cppflags: ["-DFOD_SIZE=%s"],
         },
     },
-    srcs: [
-        "service.cpp",
-        "FingerprintInscreen.cpp",
-    ],
-    shared_libs: [
-        "libbase",
-        "libhardware",
-        "libhidlbase",
-        "liblog",
-        "libutils",
-        "vendor.goodix.hardware.biometrics.fingerprint@1.0",
-        "vendor.oneplus.fingerprint.extension@1.0",
-        "vendor.oneplus.hardware.display@1.0",
-    ],
 }
 
 cc_binary {
@@ -59,7 +44,11 @@ cc_binary {
         "libhidlbase",
         "libhardware",
         "libutils",
+        "android.hardware.biometrics.fingerprint@2.1",
+        "android.hardware.biometrics.fingerprint@2.2",
         "android.hardware.biometrics.fingerprint@2.3",
+        "vendor.oneplus.fingerprint.extension@1.0",
+        "vendor.oneplus.hardware.display@1.0",
     ],
 
 }
