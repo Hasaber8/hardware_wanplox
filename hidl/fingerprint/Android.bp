@@ -1,34 +1,14 @@
-soong_config_module_type {
-    name: "oneplus_fp_hal_cc_defaults",
-    module_type: "cc_defaults",
-    config_namespace: "ONEPLUS_FOD",
-    value_variables: [
-        "POS_X",
-        "POS_Y",
-        "SIZE",
+cc_library_static {
+    name: "libudfps_extension.oneplus",
+    srcs: ["UdfpsExtension.cpp"],
+    include_dirs: [
+        "frameworks/native/services/surfaceflinger/CompositionEngine/include",
     ],
-    properties: ["cppflags"],
-}
-
-oneplus_fp_hal_cc_defaults {
-    name: "oneplus_fp_hal_defaults",
-    defaults: ["hidl_defaults"],
-    soong_config_variables: {
-        POS_X: {
-            cppflags: ["-DFOD_POS_X=%s"],
-        },
-        POS_Y: {
-            cppflags: ["-DFOD_POS_Y=%s"],
-        },
-        SIZE: {
-            cppflags: ["-DFOD_SIZE=%s"],
-        },
-    },
 }
 
 cc_binary {
     name: "android.hardware.biometrics.fingerprint@2.3-service.oneplus",
-    defaults: ["hidl_defaults", "oneplus_fp_hal_defaults"],
+    defaults: ["hidl_defaults"],
     init_rc: ["android.hardware.biometrics.fingerprint@2.3-service.oneplus.rc"],
     vintf_fragments: ["android.hardware.biometrics.fingerprint@2.3-service.oneplus.xml"],
     vendor: true,
