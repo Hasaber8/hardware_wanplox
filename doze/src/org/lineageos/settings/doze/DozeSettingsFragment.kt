@@ -42,9 +42,9 @@ class DozeSettingsFragment : PreferenceFragment(), Preference.OnPreferenceChange
 
         val dozeEnabled = Utils.isDozeEnabled(context)
         switchBar = findPreference(Utils.DOZE_ENABLE)!!
+        switchBar.isEnabled = dozeEnabled
         switchBar.addOnSwitchChangeListener(this)
-        switchBar.isChecked = dozeEnabled
-
+        
         alwaysOnDisplayPreference = findPreference(Utils.ALWAYS_ON_DISPLAY)!!
         alwaysOnDisplayPreference.isEnabled = dozeEnabled
         alwaysOnDisplayPreference.isChecked = Utils.isAlwaysOnEnabled(context)
